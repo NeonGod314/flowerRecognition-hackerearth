@@ -1,3 +1,6 @@
 # flowerRecognition-hackerearth
 
-This repo contains the soln for flower Recog competition of hackerearth
+This repo contains the solution for flower Recognition competition of hackerearth
+
+
+This has been implemented in raw tf2.0 in eagerExecution.
