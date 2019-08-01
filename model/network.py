@@ -1,7 +1,7 @@
 from __future__ import absolute_import, division, print_function
 from preprocessing import img_utils
 import tensorflow as tf
-import numpy as np
+from utils import utils
 
 
 def initialize(num_features, num_classes):
@@ -9,7 +9,7 @@ def initialize(num_features, num_classes):
     n_h1 = 50
     n_h2 = 25
 
-    print("hey: ", num_features, num_classes)
+    # print("hey: ", num_features, num_classes)
     parameters = {
 
         'h_1': tf.Variable(random_normal([num_features, n_h1]), name='h_1', dtype='float32'),
@@ -44,7 +44,7 @@ def cross_entropy(y_true, y_pred, n_classes):
 
 
 def accuracy(y_pred, y_true):
-    print("accc: ", y_pred.shape)
+    # print("accc: ", y_pred.shape)
     # y_true = tf.reshape(y_true, num_classes, [225, 1])
     y_pred = tf.reshape(y_pred, [-1, 2])
     # print("accc1: ", y_true.shape)
@@ -93,40 +93,38 @@ if __name__ == '__main__':
     n_h1 = 50
     n_h2 = 25
     num_classes = 2
+    learning_rate = 0.0001
 
     display_step = 300
 
     random_normal = tf.initializers.RandomNormal()
 
-    optimizer = tf.optimizers.SGD(learning_rate=0.0001)
+    optimizer = tf.optimizers.SGD(learning_rate=learning_rate)
+
     train_data = tf.convert_to_tensor(train_data, dtype='float32')
     test_data = tf.convert_to_tensor(test_data, dtype='float32')
 
+    train_data_batches, train_label_batches = utils.mini_batches(train_data, train_label, 32)
     parameters = initialize(num_features, num_classes)
 
     for i in range(30000):
 
-        run_optimization(train_data, train_label, parameters, optimizer)
+        for train_data_batch, train_label_batch in zip(train_data_batches, train_label_batches):
+
+            run_optimization(train_data_batch, train_label_batch, parameters, optimizer)
 
         if i % display_step == 0:
+            print("EPOCH:: ", i)
             pred = neural_net(train_data, parameters)
             loss = cross_entropy(train_label, pred, n_classes=num_classes)
 
             acc = accuracy(pred, train_label)
-            print("loss: ", loss, acc)
+            # print("loss: ", loss, acc)
             print(("step: %i, loss: %f, accuracy: %f" % (i, loss, acc)))
 
             # test_data, test_label = img_utils.load_data(test_img_path, test_class_path)
-            print(train_data.shape, test_data.shape)
+            # print(train_data.shape, test_data.shape)
             pred = neural_net(test_data, parameters)
             loss = cross_entropy(test_label, pred, n_classes=num_classes)
             acc = accuracy(pred, test_label)
             print(("step: %i, loss: %f, accuracy: %f" % (i, loss, acc)))
-
-
-
-
-
-
-
-
