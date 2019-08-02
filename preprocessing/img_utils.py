@@ -22,8 +22,7 @@ def load_data(img_path, label_path):
 
         if label == 2 or label == 1:
             img = cv2.imread(file)
-            img = cv2.resize(img, (64, 64))
-            # img = img/255.0
+            img = cv2.resize(img, (28, 28))
             x.append(img)
             if label == 2:
                 y.append(1)
