@@ -23,7 +23,8 @@ def mini_batches(x, y, batch_size):
 
 def conv2d(x, W, b, strides=1):
     x = tf.nn.conv2d(x, W, strides=[1, strides, strides, 1], padding='SAME')
-    X = tf.nn.bias_add(x, b)
+    # print("x: shape: ", x.shape, b.shape)
+    x = tf.nn.bias_add(x, b)
 
     return tf.nn.relu(x)
 
@@ -87,7 +88,7 @@ def run_optimization(x,y, parameters, num_classes, optimizer):
 
     gradients =g.gradient(loss, list(parameters.values()))
     # temp = g.gradient(loss, [parameters['bc1']])
-    print("g4:  ", gradients[4], "\ng5:  ", gradients[5], "\ng6:  ", gradients[6])
+    # print("g4:  ", gradients[4], "\ng5:  ", gradients[5], "\ng6:  ", gradients[6])
 
     optimizer.apply_gradients(zip(gradients, list(parameters.values())))
 
